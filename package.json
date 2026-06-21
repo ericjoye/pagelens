@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "css-select": "^7.0.0"
+  }
+}

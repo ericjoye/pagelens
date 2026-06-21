@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PageLens — Screenshot Mockup</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f0f1a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 40px;
+  }
+  .browser-chrome {
+    width: 860px;
+    background: #1a1a2e;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+  }
+  .browser-bar {
+    background: #16161e;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .browser-dots { display: flex; gap: 6px; }
+  .browser-dots span { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green { background: #28c840; }
+  .browser-url {
+    flex: 1;
+    background: #0f0f1a;
+    border-radius: 8px;
+    padding: 6px 14px;
+    color: #8888a0;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ext-icon {
+    width: 20px; height: 20px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: white; font-weight: bold;
+  }
+  .page-bg {
+    background: #ffffff;
+    padding: 20px 30px;
+    position: relative;
+    min-height: 300px;
+  }
+  .page-bg h1 { color: #1a1a2e; font-size: 20px; margin-bottom: 6px; }
+  .page-bg p { color: #666; font-size: 13px; }
+  /* Extension Popup */
+  .ext-popup {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 400px;
+    max-height: 560px;
+    background: #1e1e2e;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
+    overflow: hidden;
+    animation: popIn 0.2s ease-out;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .popup-header {
+    background: linear-gradient(135deg, #1e3a5f, #3b82f6);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .popup-header .icon {
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .popup-header .title-area { flex: 1; }
+  .popup-header .title {
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .popup-header .subtitle {
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    margin-top: 1px;
+  }
+  .score-circle {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: conic-gradient(#22c55e 0deg 288deg, #333 288deg 360deg);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .score-circle::before {
+    content: '';
+    position: absolute;
+    width: 34px; height: 34px;
+    background: #1e1e2e;
+    border-radius: 50%;
+  }
+  .score-circle span {
+    position: relative;
+    color: #22c55e;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .tabs {
+    display: flex;
+    background: #16161e;
+    border-bottom: 1px solid #2a2a3c;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 10px;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+  }
+  .tab:hover { color: #aaa; }
+  .popup-body {
+    padding: 14px 16px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .popup-body::-webkit-scrollbar { width: 4px; }
+  .popup-body::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .stat-card {
+    background: #16161e;
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid #2a2a3c;
+  }
+  .stat-card .stat-label {
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .stat-card .stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e4e4e7;
+    margin-top: 2px;
+  }
+  .stat-card .stat-sub {
+    font-size: 10px;
+    color: #666;
+    margin-top: 2px;
+  }
+  .stat-card.green .stat-value { color: #22c55e; }
+  .stat-card.yellow .stat-value { color: #f59e0b; }
+  .stat-card.red .stat-value { color: #ef4444; }
+  .stat-card.blue .stat-value { color: #3b82f6; }
+  .section-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .tech-tag {
+    background: #16161e;
+    border: 1px solid #2a2a3c;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #a1a1aa;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .tech-tag .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #3b82f6;
+  }
+  .issue-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: #16161e;
+    border-radius: 6px;
+    margin-bottom: 4px;
+  }
+  .issue-item .sev {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .issue-item .sev.error { background: #ef4444; }
+  .issue-item .sev.warn { background: #f59e0b; }
+  .issue-item .sev.info { background: #3b82f6; }
+  .issue-item .text { font-size: 12px; color: #e4e4e7; flex: 1; }
+  .issue-item .count {
+    font-size: 11px;
+    color: #666;
+    background: #0f0f1a;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .export-btn {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="browser-chrome">
+  <div class="browser-bar">
+    <div class="browser-dots">
+      <span class="dot-red"></span>
+      <span class="dot-yellow"></span>
+      <span class="dot-green"></span>
+    </div>
+    <div class="browser-url">
+      <span>🔒</span>
+      <span>github.com/nousresearch/hermes-agent</span>
+    </div>
+    <div class="ext-icon">P</div>
+  </div>
+  <div class="page-bg">
+    <h1>hermes-agent — Intelligent AI Assistant</h1>
+    <p>Hermes Agent is a powerful AI assistant built by Nous Research...</p>
+
+    <div class="ext-popup">
+      <div class="popup-header">
+        <div class="icon">🔬</div>
+        <div class="title-area">
+          <div class="title">PageLens</div>
+          <div class="subtitle">github.com/nousresearch/hermes-agent</div>
+        </div>
+        <div class="score-circle"><span>80</span></div>
+      </div>
+      <div class="tabs">
+        <div class="tab active">Overview</div>
+        <div class="tab">Performance</div>
+        <div class="tab">SEO</div>
+        <div class="tab">A11y</div>
+        <div class="tab">Tech</div>
+        <div class="tab">Security</div>
+        <div class="tab">Links</div>
+      </div>
+      <div class="popup-body">
+        <div class="stats-grid">
+          <div class="stat-card green">
+            <div class="stat-label">Health Score</div>
+            <div class="stat-value">80/100</div>
+            <div class="stat-sub">Good — 6 issues found</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-label">Page Weight</div>
+            <div class="stat-value">1.2 MB</div>
+            <div class="stat-sub">23 requests</div>
+          </div>
+          <div class="stat-card yellow">
+            <div class="stat-label">Load Time</div>
+            <div class="stat-value">1.8s</div>
+            <div class="stat-sub">DOM: 1.2s</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Security</div>
+            <div class="stat-value">A+</div>
+            <div class="stat-sub">HTTPS, secure headers</div>
+          </div>
+        </div>
+
+        <div class="section-title">Top Issues</div>
+        <div class="issue-item">
+          <div class="sev error"></div>
+          <div class="text">Missing alt text on 2 images</div>
+          <div class="count">2</div>
+        </div>
+        <div class="issue-item">
+          <div class="sev error"></div>
+          <div class="text">Heading hierarchy skip (h1 → h3)</div>
+          <div class="count">1</div>
+        </div>
+        <div class="issue-item">
+          <div class="sev warn"></div>
+          <div class="text">Low contrast on 3 elements</div>
+          <div class="count">3</div>
+        </div>
+        <div class="issue-item">
+          <div class="sev info"></div>
+          <div class="text">Missing lang attribute</div>
+          <div class="count">1</div>
+        </div>
+
+        <div class="section-title" style="margin-top: 14px;">Technologies Detected</div>
+        <div class="tech-tags">
+          <div class="tech-tag"><div class="dot"></div>React</div>
+          <div class="tech-tag"><div class="dot" style="background:#22c55e;"></div>Next.js</div>
+          <div class="tech-tag"><div class="dot" style="background:#f59e0b;"></div>TypeScript</div>
+          <div class="tech-tag"><div class="dot" style="background:#8b5cf6;"></div>Tailwind CSS</div>
+          <div class="tech-tag"><div class="dot" style="background:#3b82f6;"></div>GitHub Pages</div>
+        </div>
+
+        <button class="export-btn">📄 Export Full Report (JSON)</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

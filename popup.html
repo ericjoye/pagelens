@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PageLens</title>
+  <link rel="stylesheet" href="css/popup.css">
+</head>
+<body>
+  <header class="header">
+    <h1>PageLens</h1>
+    <div class="score-badge" id="score-badge">--</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="performance">Perf</button>
+    <button class="tab-btn" data-tab="seo">SEO</button>
+    <button class="tab-btn" data-tab="a11y">A11y</button>
+    <button class="tab-btn" data-tab="tech">Tech</button>
+    <button class="tab-btn" data-tab="security">Security</button>
+    <button class="tab-btn" data-tab="links">Links</button>
+  </nav>
+
+  <main class="content">
+    <!-- Overview -->
+    <section id="tab-overview" class="tab-panel active">
+      <div class="loading" id="overview-loading">Analyzing page...</div>
+      <div id="overview-content" class="hidden">
+        <div class="score-ring" id="score-ring">
+          <span class="score-value" id="score-value">--</span>
+          <span class="score-label">Health Score</span>
+        </div>
+        <div class="stats-grid" id="quick-stats"></div>
+        <div class="card">
+          <h3>Top Issues</h3>
+          <div id="top-issues"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Performance -->
+    <section id="tab-performance" class="tab-panel">
+      <div class="loading" id="perf-loading">Measuring...</div>
+      <div id="perf-content" class="hidden"></div>
+    </section>
+
+    <!-- SEO -->
+    <section id="tab-seo" class="tab-panel">
+      <div class="loading" id="seo-loading">Checking SEO...</div>
+      <div id="seo-content" class="hidden"></div>
+    </section>
+
+    <!-- Accessibility -->
+    <section id="tab-a11y" class="tab-panel">
+      <div class="loading" id="a11y-loading">Checking accessibility...</div>
+      <div id="a11y-content" class="hidden"></div>
+    </section>
+
+    <!-- Technology -->
+    <section id="tab-tech" class="tab-panel">
+      <div class="loading" id="tech-loading">Detecting technologies...</div>
+      <div id="tech-content" class="hidden"></div>
+    </section>
+
+    <!-- Security -->
+    <section id="tab-security" class="tab-panel">
+      <div class="loading" id="security-loading">Checking security...</div>
+      <div id="security-content" class="hidden"></div>
+    </section>
+
+    <!-- Links -->
+    <section id="tab-links" class="tab-panel">
+      <div class="loading" id="links-loading">Analyzing links...</div>
+      <div id="links-content" class="hidden"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <button id="export-json-btn" class="btn-export" title="Export as JSON">JSON</button>
+    <button id="export-csv-btn" class="btn-export btn-export-csv" title="Export as CSV">CSV</button>
+    <button id="export-pdf-btn" class="btn-export btn-export-pdf" title="Export as PDF report">PDF</button>
+    <button id="upgrade-btn" class="btn-upgrade" title="Upgrade to Pro">⭐ Pro</button>
+    <button id="refresh-btn" class="btn-refresh" title="Re-analyze page">↻</button>
+  </footer>
+
+  <script src="js/popup.js"></script>
+</body>
+</html>
