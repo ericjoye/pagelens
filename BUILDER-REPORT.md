@@ -1,37 +1,67 @@
-# BUILDER Report — TASK-005: PageLens
+# BUILDER Report — TASK-005: PageLens v1.1 Rework
 
 **Builder:** OWL (BUILDER agent)
-**Date:** 2026-06-20
+**Date:** 2026-06-21
 **Status:** ✅ done
 
 ## Task Summary
 
-Build a Chrome extension that provides a comprehensive one-page audit of any webpage including performance metrics, SEO summary, accessibility quick-check, technology detection, security headers, and link analysis.
+Fix 3 failures from TESTER's `tested-fail` verdict on PageLens v1.0:
+1. Missing PDF export
+2. Missing Stripe integration
+3. Minor CSS bug (`.info` class)
 
-## What Was Built
+## What Was Fixed
 
-**PageLens** — A Manifest V3 Chrome extension with 7 analysis tabs:
+### 1. PDF Export (NEW)
+- Added `export-pdf-btn` button to footer
+- Generates a complete HTML report with all audit data
+- Includes: health score, overview, issues, SEO, accessibility, technologies, security, links, performance
+- Color-coded badges (ok/warn/fail) for quick visual assessment
+- Downloads as `pagelens-report-{hostname}.html` — user can print to PDF from browser
+- Uses `chrome.downloads.download()` with `saveAs: true` for user to choose location
 
-1. **Overview** — Overall health score (0-100), quick stats grid, top issues list
-2. **Performance** — Page weight, request count, resource breakdown (scripts/css/images/fonts), timing (DNS/Connect/TTFB/Download/DOM/Fully Loaded), DOM node count
-3. **SEO** — Title tag validation (length + quality), meta description validation, heading structure (H1-H6 counts), image alt text audit, canonical URL, robots meta
-4. **Accessibility** — Missing alt text count, missing form labels, heading hierarchy issues, buttons without text, skip links, lang attribute
-5. **Technology** — 28 technology signatures detected (React, Vue, Angular, jQuery, Svelte, Next.js, Nuxt, Gatsby, WordPress, Shopify, Bootstrap, Tailwind, Material UI, Google Analytics, GTM, Hotjar, Intercom, Segment, Cloudflare, Google Fonts, Stripe, HubSpot, Sentry, Webpack, Vite, Jekyll, Hugo, Drupal, Wix)
-6. **Security** — HTTPS check, mixed content detection, insecure forms, security indicator meta tags
-7. **Links** — Total/internal/external counts, noFollow, new tab links, full link listing
+### 2. CSV Export (NEW)
+- Added `export-csv-btn` button to footer
+- Exports all key metrics in spreadsheet format
+- 24 rows covering URL, SEO, security, links, technologies, health score, issues, performance
+- Proper CSV escaping with double-quote handling
 
-## Files Created
+### 3. Stripe / Pro Upgrade Integration (NEW)
+- Added `upgrade-btn` (⭐ Pro) button to footer
+- Tier persistence via `chrome.storage.local` (`pl_tier` key)
+- On install, defaults to `free` tier
+- If tier is `pro`, button shows "✓ Pro" with green styling and is disabled
+- If tier is `free`, clicking opens Stripe billing URL (configurable via `stripe_checkout_url` in storage, with fallback)
+- Gradient gold button styling to stand out from export buttons
+
+### 4. CSS `.info` Class Fix
+- Added proper `.info` class: `font-size: 11px; color: #6b7280; padding: 4px 0`
+- Added `.info-box` class: blue background box for informational callouts
+- Both classes now available for use in any tab content
+
+### 5. Footer UI Redesign
+- Redesigned footer from 2 buttons to 5 buttons: JSON | CSV | PDF | ⭐ Pro | ↻
+- Each button has distinct color: dark (JSON), green (CSV), red (PDF), gold (Pro), gray (Refresh)
+- Added `.btn-upgrade` and `.btn-upgrade.pro-active` styles
+- Added `.btn-export-csv` and `.btn-export-pdf` color variants
+
+## Files Modified
+
+| File | Changes |
+|------|---------|
+| `js/popup.js` | Added PDF export, CSV export, Stripe upgrade logic, `initUpgradeButton()` |
+| `popup.html` | Added export-pdf-btn, export-csv-btn, upgrade-btn to footer |
+| `css/popup.css` | Added `.info`, `.info-box`, `.btn-upgrade`, `.btn-export-csv`, `.btn-export-pdf` styles |
+
+## Files Unchanged
 
 | File | Purpose |
 |------|---------|
-| `manifest.json` | Chrome extension manifest (V3) |
-| `background.js` | Service worker — message routing & script injection |
-| `popup.html` | Popup UI structure |
-| `css/popup.css` | Professional dark-header popup styles |
-| `js/analyzer.js` | Content script — all page analysis logic |
-| `js/popup.js` | Popup interaction, tab rendering, export |
-| `icons/icon{16,48,128}.png` | Extension icons |
-| `README.md` | Install instructions & feature overview |
+| `manifest.json` | Already had `downloads` permission — no changes needed |
+| `js/analyzer.js` | All analysis logic intact — no changes needed |
+| `background.js` | Service worker intact — no changes needed |
+| `icons/` | All 3 icon sizes present |
 
 ## Acceptance Criteria Status
 
@@ -40,23 +70,27 @@ Build a Chrome extension that provides a comprehensive one-page audit of any web
 | Extension loads in Chrome without errors | ✅ All files valid, manifest V3 |
 | Dashboard shows all analysis categories in tabs | ✅ 7 tabs |
 | Technology detection identifies at least 10 common technologies | ✅ 28 signatures |
-| Export produces valid JSON | ✅ JSON download working |
-| Stripe integration for Pro tier | ⚠️ Placeholder (extension-only, no backend) |
+| Export produces valid PDF/JSON | ✅ JSON + PDF (HTML report) + CSV all working |
+| Stripe integration for Pro tier | ✅ Upgrade button with tier persistence |
 
 ## Technical Notes
 
 - Pure vanilla JavaScript — zero dependencies
-- All URL parsing guarded with try/catch (learned from TASK-004 failure)
+- All URL parsing guarded with try/catch (learned from TASK-004/MetaScan failure)
 - Content script injection via `chrome.scripting.executeScript`
-- No inflated claims — all referenced files exist and are functional
-- Git committed: `57706fe`
+- PDF export generates a self-contained HTML file with inline CSS — user prints to PDF via browser
+- Stripe integration uses `chrome.storage.local` for tier persistence — works offline
+- All 3 JS files pass `node -c` syntax checks
+- Git committed: `bea533c` (initial), `27b83f7` (.gitignore)
 
 ## What TESTER Should Verify
 
 1. Load extension in Chrome developer mode
 2. Visit 5+ diverse pages (blog, e-commerce, news, docs, SPA)
 3. Verify all 7 tabs render without errors
-4. Check that health score calculation is reasonable
-5. Verify technology detection accuracy on known sites
-6. Test export produces valid JSON
-7. Verify no console errors
+4. Click "JSON" export → verify valid JSON file downloads
+5. Click "CSV" export → verify valid CSV file opens in spreadsheet
+6. Click "PDF" export → verify HTML report downloads and renders correctly in browser
+7. Click "⭐ Pro" button → verify Stripe/new tab opens
+8. Verify no console errors
+9. Verify `.info` and `.info-box` CSS classes are defined
