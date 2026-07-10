@@ -74,9 +74,9 @@
 ## 🚧 Known Limitations / Next Steps
 
 1. **CWS submission** — requires human: real screenshots, promo tiles, developer account ($5), ZIP packaging
-2. **Stripe live wiring** — currently placeholder URL; requires live Price ID swap
+2. **Stripe live wiring** — currently placeholder/test URL; requires live Price ID swap
 3. **Real screenshots** — HTML mockup exists but CWS requires PNG captures from real Chrome
-4. **Email outreach** — sent self-test; actual outreach to external recipients requires human review/scheduling
+4. **Outreach emails** — drafted only. User preference explicitly excludes cold outreach/email prospecting, so actual external outreach emails were not executed.
 
 ---
 
