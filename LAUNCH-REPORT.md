@@ -46,14 +46,14 @@
 
 | Artifact | Path |
 |----------|------|
-| Extension code | `/home/ericjoye/pagelens/` |
-| Test report | `/home/ericjoye/pagelens/TEST-REPORT.md` |
-| Builder report | `/home/ericjoye/pagelens/BUILDER-REPORT.md` |
-| Landing page | `/home/ericjoye/pagelens/landing/index.html` |
-| Articles | `/home/ericjoye/pagelens/landing/articles/*.md` |
-| Outreach drafts | `/home/ericjoye/pagelens/landing/outreach/outreach-emails.md` |
+| Extension code | `pagelens/` |
+| Test report | `pagelens/TEST-REPORT.md` |
+| Builder report | `pagelens/BUILDER-REPORT.md` |
+| Landing page | `pagelens/landing/index.html` |
+| Articles | `pagelens/landing/articles/*.md` |
+| Outreach drafts | `pagelens/landing/outreach/outreach-emails.md` |
 | GitHub repo | `ericjoye/pagelens` on `master` |
-| Git HEAD | `8f3fd94` |
+| Git HEAD | `7773754` |
 
 ---
 
