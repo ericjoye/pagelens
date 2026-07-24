@@ -1,6 +1,13 @@
-# PageLens — Chrome Extension
+# PageLens — One-Click Page Audit Tool
 
-Comprehensive one-page audit tool for any webpage. Provides 7 analysis categories with health scoring, technology detection, and JSON export.
+[![GitHub Pages](https://img.shields.io/badge/🌐-Live%20Landing-blue?style=flat-square&color=6366f1)](https://ericjoye.github.io/pagelens/)
+[![Vercel Landing](https://img.shields.io/badge/▲-Vercel%20Mirror-000?style=flat-square)](https://pagelens-landing.vercel.app)
+[![GitHub](https://img.shields.io/github/license/ericjoye/pagelens?style=flat-square&color=10b981)](LICENSE)
+[![Buy on Polar](https://img.shields.io/badge/🛒-Buy%20%245.00-000?style=flat-square&logo=polar)](https://buy.polar.sh/f83cdc44-4137-45c0-b59d-26a06deeb144)
+
+**Comprehensive one-page audit tool for any webpage.** Click the PageLens icon on any page to get health scoring (0-100), SEO, accessibility, technology detection, security, performance, and link analysis — all in one clean popup. Free + $5 donation checkout.
+
+**[🌐 Live Landing](https://ericjoye.github.io/pagelens/)** · **[📖 Articles](https://ericjoye.github.io/pagelens/blog/)** · **[🛒 Buy $5](https://buy.polar.sh/f83cdc44-4137-45c0-b59d-26a06deeb144)** · **[🐛 Report Issue](https://github.com/ericjoye/pagelens/issues)**
 
 ## Features
 

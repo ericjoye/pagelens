@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PageLens Blog — Page Audit Tips & Web Quality</title>
+    <meta name="description" content="PageLens blog: SEO auditing, accessibility checks, technology detection, and web quality best practices.">
+    <meta property="og:title" content="PageLens Blog — Page Audit Tips & Web Quality">
+    <meta property="og:description" content="Practical guides for auditing web pages — SEO, accessibility, security, technology detection.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --bg: #0a0e17; --bg-card: #111827; --accent: #f59e0b; --text: #e5e7eb; --text-muted: #9ca3af; --border: #1f2937; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
+        nav .logo { font-weight: 700; color: var(--accent); text-decoration: none; font-size: 1.2rem; }
+        nav .nav-links { display: flex; gap: 20px; }
+        nav .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+        nav .nav-links a:hover { color: var(--accent); }
+        h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
+        h1 span { color: var(--accent); }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 48px; }
+        .articles { display: flex; flex-direction: column; gap: 20px; }
+        .article-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 28px; transition: border-color 0.2s; }
+        .article-card:hover { border-color: var(--accent); }
+        .article-card h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+        .article-card h2 a { color: var(--text); text-decoration: none; }
+        .article-card h2 a:hover { color: var(--accent); }
+        .article-card .meta { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px; }
+        .article-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; }
+        .article-card .read-more { display: inline-block; margin-top: 12px; color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .article-card .read-more:hover { text-decoration: underline; }
+        footer { border-top: 1px solid var(--border); padding: 30px 0; margin-top: 60px; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+        footer a { color: var(--accent); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/pagelens/" class="logo">🔬 PageLens</a>
+            <div class="nav-links">
+                <a href="/pagelens/">Home</a>
+                <a href="https://github.com/ericjoye/pagelens">GitHub</a>
+                <a href="https://buy.polar.sh/f83cdc44-4137-45c0-b59d-26a06deeb144">Buy $5</a>
+            </div>
+        </nav>
+
+        <h1>PageLens <span>Blog</span></h1>
+        <p class="subtitle">Practical guides for auditing web pages — covering SEO, accessibility, performance, security, and technology detection.</p>
+
+        <div class="articles">
+            <div class="article-card">
+                <h2><a href="/pagelens/blog/why-audit-before-launch.html">Why Every Site Owner Should Audit Pages Before Launch</a></h2>
+                <div class="meta">📅 July 2026 · 3 min read</div>
+                <p>Most site owners skip pre-launch auditing because traditional tools take too long. PageLens turns auditing into a browser action — open any page, click the toolbar icon, and inspect seven result tabs in seconds.</p>
+                <a href="/pagelens/blog/why-audit-before-launch.html" class="read-more">Read article →</a>
+            </div>
+
+            <div class="article-card">
+                <h2><a href="/pagelens/blog/seo-accessibility-security.html">SEO, Accessibility, and Security: One Pass, Not Three</a></h2>
+                <div class="meta">📅 July 2026 · 2 min read</div>
+                <p>Auditing a webpage often means jumping between Lighthouse, axe, security headers tools, and manual inspection. PageLens combines those checks into one Chrome toolbar action.</p>
+                <a href="/pagelens/blog/seo-accessibility-security.html" class="read-more">Read article →</a>
+            </div>
+
+            <div class="article-card">
+                <h2><a href="/pagelens/blog/tech-stack-detection-best-practices.html">Tech Stack Detection: What You Can Learn From a Single Page Load</a></h2>
+                <div class="meta">📅 July 2026 · 2 min read</div>
+                <p>Knowing what a site is built with is useful for competitive research, migration planning, vendor evaluation, and security assessment. PageLens detects 28+ technologies directly from the browser.</p>
+                <a href="/pagelens/blog/tech-stack-detection-best-practices.html" class="read-more">Read article →</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>PageLens — free Chrome extension. <a href="https://buy.polar.sh/f83cdc44-4137-45c0-b59d-26a06deeb144">Buy $5</a> to support development. MIT License.</p>
+        </footer>
+    </div>
+</body>
+</html>
