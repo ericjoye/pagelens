@@ -4,3 +4,4 @@ package.json
 pagelens.zip
 .DS_Store
 *.log
+.vercel
