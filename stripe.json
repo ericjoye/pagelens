@@ -1,0 +1,14 @@
+{
+  "product": "PageLens Pro",
+  "description": "Support PageLens development and get priority support. One-time payment — licenses 1 device.",
+  "version": "1.0.0",
+  "price_usd": 8,
+  "price_display": "$8.00",
+  "type": "digital_goods",
+  "checkout_url": "https://buy.polar.sh/f83cdc44-4137-45c0-b59d-26a06deeb144",
+  "landing_url": "https://pagelens-landing.vercel.app",
+  "cws_url": "https://chromewebstore.google.com/detail/pagelens/knjfilihoadbeclplbgaaddnelelnibo",
+  "payment_provider": "polar",
+  "created": "2026-07-24",
+  "notes": "Pro version is a donation/support model. Extension is free + optional $5 Polar.sh checkout. stripe.json documents $8 Pro tier pricing."
+}
