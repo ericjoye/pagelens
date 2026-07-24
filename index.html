@@ -6,697 +6,140 @@
     <title>PageLens — One-Click Page Audit Tool</title>
     <meta name="description" content="Comprehensive one-page audit tool for any webpage. 7 analysis categories with health scoring, technology detection, and JSON export.">
     <meta property="og:title" content="PageLens — One-Click Page Audit Tool">
-    <meta property="og:description" content="7 analysis categories, health scoring, technology detection, and JSON export — all in one click.">
-    <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg: #0a0e17;
-            --bg-card: #111827;
-            --bg-card-hover: #1a2332;
-            --accent: #f59e0b;
-            --accent-dim: #d97706;
-            --accent-glow: rgba(245, 158, 11, 0.15);
-            --text: #e5e7eb;
-            --text-muted: #9ca3af;
-            --text-dim: #6b7280;
-            --border: #1f2937;
-            --border-light: #374151;
-            --code-bg: #0d1117;
+            --bg: #0f172a; --surface: #1e293b; --border: #334155;
+            --text: #e2e8f0; --text-muted: #94a3b8;
+            --primary: #6366f1; --primary-hover: #4f46e5;
+            --accent: #22d3ee; --success: #10b981; --radius: 12px;
         }
         html { scroll-behavior: smooth; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg); color: var(--text); line-height: 1.7; overflow-x: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
         nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: rgba(10, 14, 23, 0.85); backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border); padding: 16px 0;
+            padding: 20px 0; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
         }
-        nav .container { display: flex; justify-content: space-between; align-items: center; }
-        nav .logo { font-size: 1.2rem; font-weight: 700; color: var(--accent); text-decoration: none; }
-        nav .nav-links { display: flex; gap: 24px; align-items: center; }
-        nav .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
-        nav .nav-links a:hover { color: var(--accent); }
-        nav .nav-cta {
-            background: var(--accent); color: #000; padding: 8px 18px; border-radius: 6px;
-            font-weight: 600; text-decoration: none; font-size: 0.85rem; transition: background 0.2s;
-        }
-        nav .nav-cta:hover { background: #fbbf24; }
+        .brand { font-weight: 700; font-size: 1.1rem; color: var(--text); text-decoration: none; }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: #fff !important; padding: 6px 16px; border-radius: 6px; }
+        .nav-cta:hover { background: var(--primary-hover) !important; }
         .hero {
-            padding: 140px 0 80px; text-align: center;
-            background: radial-gradient(ellipse at 50% 0%, var(--accent-glow) 0%, transparent 60%);
+            padding: 100px 0 60px; text-align: center;
+            background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.08) 0%, transparent 60%);
         }
-        .hero .badge {
-            display: inline-block; background: var(--accent-glow); border: 1px solid var(--accent-dim);
-            color: var(--accent); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
-            margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.5px;
+        .badge {
+            display: inline-block; background: var(--surface); border: 1px solid var(--border);
+            color: var(--accent); padding: 6px 16px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 600; margin-bottom: 24px; letter-spacing: 0.5px;
         }
-        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 20px; letter-spacing: -0.02em; }
-        .hero h1 span { color: var(--accent); }
-        .hero .tagline { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 36px; }
-        .hero .cta-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-        .btn-primary {
-            background: var(--accent); color: #000; padding: 14px 28px; border-radius: 8px;
-            font-weight: 700; text-decoration: none; font-size: 1rem; transition: all 0.2s; border: none; cursor: pointer;
-        }
-        .btn-primary:hover { background: #fbbf24; transform: translateY(-1px); }
-        .btn-secondary {
-            background: transparent; color: var(--text); padding: 14px 28px; border-radius: 8px;
-            font-weight: 600; text-decoration: none; font-size: 1rem; border: 1px solid var(--border-light); transition: all 0.2s;
-        }
-        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-        .score-circle {
-            width: 160px; height: 160px; margin: 40px auto 0; position: relative;
-        }
+        h1 { font-size: clamp(2.2rem,5vw,3.2rem); font-weight: 800; line-height: 1.15; margin-bottom: 24px; letter-spacing: -1.5px; }
+        h1 span { background: linear-gradient(135deg,var(--primary),var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .tagline { font-size: 1.15rem; color: var(--text-muted); max-width: 560px; margin: 0 auto 32px; line-height: 1.7; }
+        .cta-group { display: flex; gap: 12px; justify-content: center; margin-bottom: 48px; flex-wrap: wrap; }
+        .btn { display: inline-block; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--primary); }
+        .score-circle { width: 160px; height: 160px; margin: 0 auto; position: relative; }
         .score-circle svg { transform: rotate(-90deg); }
-        .score-circle .score-text {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center;
-        }
-        .score-circle .score-number { font-size: 2.5rem; font-weight: 800; color: var(--accent); }
-        .score-circle .score-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+        .score-circle .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+        .score-number { font-size: 2.5rem; font-weight: 800; color: var(--accent); }
+        .score-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .buy-box { text-align: center; padding: 40px 20px; background: linear-gradient(135deg,#1e1b4b,#0f172a); border: 1px solid var(--primary); border-radius: var(--radius); margin: 0 auto 48px; max-width: 480px; }
+        .buy-box h2 { margin-bottom: 8px; font-size: 1.5rem; }
+        .buy-box p { color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem; }
+        .buy-btn { display: inline-block; background: linear-gradient(135deg,var(--primary),#8b5cf6); color: #fff; padding: 14px 36px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: all 0.2s; box-shadow: 0 4px 20px rgba(99,102,241,0.3); }
+        .buy-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(99,102,241,0.5); }
         section { padding: 80px 0; }
-        .section-header { text-align: center; margin-bottom: 56px; }
+        .section-header { text-align: center; margin-bottom: 48px; }
         .section-header h2 { font-size: 2rem; font-weight: 700; margin-bottom: 12px; }
         .section-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 550px; margin: 0 auto; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-        .feature-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
-            padding: 28px; transition: all 0.3s;
-        }
-        .feature-card:hover { background: var(--bg-card-hover); border-color: var(--accent-dim); transform: translateY(-2px); }
-        .feature-card .icon {
-            width: 44px; height: 44px; background: var(--accent-glow); border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 16px;
-        }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 20px; }
+        .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: border-color 0.2s, transform 0.2s; }
+        .feature-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .feature-card .icon { font-size: 1.5rem; margin-bottom: 12px; }
         .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
-        .feature-card p { color: var(--text-muted); font-size: 0.92rem; }
-        .audit-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; max-width: 800px; margin: 0 auto; }
-        .category-item {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
-            padding: 16px 20px; display: flex; align-items: center; gap: 12px;
-        }
-        .category-item .cat-icon { font-size: 1.4rem; }
-        .category-item .cat-name { font-weight: 600; font-size: 0.95rem; }
-        .category-item .cat-desc { color: var(--text-dim); font-size: 0.8rem; }
-        .install-steps { max-width: 500px; margin: 0 auto; }
-        .install-step {
-            display: flex; gap: 16px; align-items: flex-start; padding: 16px 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .install-step:last-child { border-bottom: none; }
-        .install-step .step-num {
-            width: 28px; height: 28px; background: var(--accent-glow); border: 1px solid var(--accent-dim);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: var(--accent); font-weight: 700; font-size: 0.8rem; flex-shrink: 0;
-        }
-        .install-step .step-text { color: var(--text-muted); font-size: 0.92rem; }
+        .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+        .audit-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 16px; max-width: 800px; margin: 0 auto; }
+        .cat-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s; }
+        .cat-item:hover { border-color: var(--primary); }
+        .cat-icon { font-size: 1.4rem; }
+        .cat-name { font-weight: 600; font-size: 0.95rem; }
+        .cat-desc { color: var(--text-muted); font-size: 0.8rem; }
+        .steps { max-width: 500px; margin: 0 auto; }
+        .step { display: flex; gap: 16px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--border); }
+        .step:last-child { border-bottom: none; }
+        .step-num { width: 28px; height: 28px; background: rgba(99,102,241,0.15); border: 1px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
+        .step-text { color: var(--text-muted); font-size: 0.92rem; }
+        .step-text code { color: var(--accent); background: rgba(34,211,238,0.1); padding: 2px 6px; border-radius: 4px; font-family: monospace; }
         footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; }
         .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; flex-wrap: wrap; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--accent); }
-        footer p { color: var(--text-dim); font-size: 0.8rem; }
-        @media (max-width: 768px) {
-            nav .nav-links { display: none; }
-            .hero { padding: 120px 0 60px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text); }
+        footer p { color: var(--text-muted); font-size: 0.8rem; }
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            nav { flex-direction: column; gap: 12px; }
+            .nav-links { flex-wrap: wrap; gap: 12px; justify-content: center; }
             .features-grid { grid-template-columns: 1fr; }
+            .audit-grid { grid-template-columns: 1fr; }
+            .hero { padding: 80px 0 40px; }
+            section { padding: 48px 0; }
         }
     </style>
-
-<style>
-:root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --border: #334155;
-  --text: #e2e8f0;
-  --text-muted: #94a3b8;
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --accent: #22d3ee;
-  --success: #10b981;
-  --radius: 12px;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-.container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-/* Navigation */
-nav {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 0;
-}
-
-.brand {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--text);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.logo-mark {
-  width: 24px;
-  height: 24px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  border-radius: 6px;
-}
-
-.product-name {
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 24px;
-  margin-top: 12px;
-}
-
-.nav-links a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.nav-links a:hover {
-  color: var(--text);
-}
-
-.nav-cta {
-  background: var(--primary);
-  color: #fff !important;
-  padding: 6px 16px;
-  border-radius: 6px;
-}
-
-/* Hero */
-.hero {
-  padding: 80px 0 60px;
-  text-align: center;
-}
-
-.badge {
-  display: inline-block;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--accent);
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 24px;
-  letter-spacing: 0.5px;
-}
-
-h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  line-height: 1.15;
-  margin-bottom: 24px;
-  letter-spacing: -1.5px;
-}
-
-h1 span {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.tagline {
-  font-size: 1.15rem;
-  color: var(--text-muted);
-  max-width: 560px;
-  margin: 0 auto 32px;
-  line-height: 1.7;
-}
-
-/* Buttons */
-.cta-group {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-bottom: 48px;
-}
-
-.btn {
-  display: inline-block;
-  padding: 12px 28px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.btn-primary {
-  background: var(--primary);
-  color: #fff;
-}
-
-.btn-primary:hover {
-  background: var(--primary-hover);
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-
-.btn-secondary:hover {
-  border-color: var(--primary);
-}
-
-/* Buy Section */
-.buy-section {
-  text-align: center;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, #1e1b4b, #0f172a);
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-  margin: 0 auto 48px;
-  max-width: 480px;
-}
-
-.buy-section h2 {
-  color: var(--text);
-  margin-bottom: 8px;
-  font-size: 1.5rem;
-}
-
-.buy-section p {
-  color: var(--text-muted);
-  margin-bottom: 20px;
-  font-size: 0.95rem;
-}
-
-.buy-btn {
-  display: inline-block;
-  background: linear-gradient(135deg, var(--primary), #8b5cf6);
-  color: #fff;
-  padding: 14px 36px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 1.1rem;
-  transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
-}
-
-.buy-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(99, 102, 241, 0.5);
-}
-
-.buy-note {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  margin-top: 12px;
-}
-
-/* Terminal */
-.terminal {
-  background: #0d1117;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  text-align: left;
-  max-width: 520px;
-  margin: 0 auto;
-}
-
-.terminal-header {
-  display: flex;
-  gap: 8px;
-  padding: 12px 16px;
-  background: #161b22;
-  border-bottom: 1px solid var(--border);
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.dot.red { background: #ef4444; }
-.dot.yellow { background: #f59e0b; }
-.dot.green { background: #10b981; }
-
-.terminal .prompt {
-  color: var(--success);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.terminal .output {
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.terminal .comment {
-  color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85rem;
-}
-
-/* Sections */
-section {
-  padding: 80px 0;
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.section-header h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.section-header p {
-  color: var(--text-muted);
-  font-size: 1.05rem;
-}
-
-/* Features Grid */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-}
-
-.feature-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  transition: border-color 0.2s;
-}
-
-.feature-card:hover {
-  border-color: var(--primary);
-}
-
-.feature-card .icon {
-  font-size: 1.5rem;
-  margin-bottom: 12px;
-}
-
-.feature-card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.feature-card p {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
-
-/* Steps */
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.step-card {
-  text-align: center;
-  padding: 24px;
-}
-
-.step-num {
-  width: 40px;
-  height: 40px;
-  background: var(--primary);
-  color: #fff;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-
-.step-card h4 {
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.step-card p {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-/* Footer */
-footer {
-  padding: 40px 0;
-  border-top: 1px solid var(--border);
-  text-align: center;
-}
-
-.footer-brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.footer-brand .logo-text {
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-.footer-brand-sub {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  margin-bottom: 16px;
-}
-
-.footer-links {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-bottom: 16px;
-}
-
-.footer-links a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-
-.footer-links a:hover {
-  color: var(--text);
-}
-
-footer p {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-  h1 { font-size: 2rem; }
-  .steps-grid { grid-template-columns: 1fr; }
-  .features-grid { grid-template-columns: 1fr; }
-  .nav-links { flex-wrap: wrap; gap: 12px; }
-}
-</style>
-
 </head>
 <body>
-    <nav>
-        <div class="container">
-            <a href="#" class="logo">PageLens</a>
-            <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#categories">Categories</a>
-                <a href="#install">Install</a>
-                <a href="https://github.com/ericjoye/pagelens" target="_blank">GitHub</a>
-                <a href="#install" class="nav-cta">Get Started</a>
-            </div>
-        </div>
-    </nav>
+<div class="container"><nav><a href="#" class="brand">PageLens</a><div class="nav-links"><a href="#features">Features</a><a href="#categories">Categories</a><a href="#install">Install</a><a href="https://github.com/ericjoye/pagelens" target="_blank">GitHub</a><a href="#install" class="nav-cta">Get Started</a></div></nav></div>
 
-    <section class="hero">
-        <div class="container">
-            <div class="badge">Chrome Extension · Manifest V3</div>
-            <h1>One-click <span>page audits</span></h1>
+<section class="hero"><div class="container"><div class="badge">Chrome Extension · Manifest V3</div><h1>One-click <span>page audits</span></h1>
 
-    <div style="text-align:center; margin: 20px 0;">
-      <a href="https://buy.polar.sh/f83cdc44-4137-45c0-b59d-26a06deeb144" 
-         style="display:inline-block; background:#000; color:#fff; padding:12px 32px; 
-                text-decoration:none; border-radius:6px; font-size:18px; font-weight:bold;">
-        Buy — $5.00
-      </a>
-    </div>
+<div class="buy-box"><h2>PageLens Pro</h2><p>Support development and get priority support</p><a href="https://buy.polar.sh/f83cdc44-4137-45c0-b59d-26a06deeb144" class="buy-btn">Buy — $5.00</a><p style="margin-top:12px;font-size:0.8rem;color:var(--text-muted)">One-time payment · Licenses 1 device</p></div>
 
-            <p class="tagline">Comprehensive analysis across 7 categories — health scoring, SEO, accessibility, security, technology detection, and JSON export.</p>
-            <div class="cta-group">
-                <a href="#install" class="btn-primary">Load in Chrome</a>
-                <a href="https://github.com/ericjoye/pagelens" target="_blank" class="btn-secondary">View on GitHub</a>
-            </div>
-            <div class="score-circle">
-                <svg width="160" height="160" viewBox="0 0 160 160">
-                    <circle cx="80" cy="80" r="70" fill="none" stroke="#1f2937" stroke-width="8"/>
-                    <circle cx="80" cy="80" r="70" fill="none" stroke="#f59e0b" stroke-width="8"
-                        stroke-dasharray="440" stroke-dashoffset="66" stroke-linecap="round"/>
-                </svg>
-                <div class="score-text">
-                    <div class="score-number">85</div>
-                    <div class="score-label">Health Score</div>
-                </div>
-            </div>
-        </div>
-    </section>
+<p class="tagline">Comprehensive analysis across 7 categories — health scoring, SEO, accessibility, security, technology detection, and JSON export.</p>
+<div class="cta-group"><a href="#install" class="btn btn-primary">Load in Chrome</a><a href="https://github.com/ericjoye/pagelens" target="_blank" class="btn btn-secondary">View on GitHub</a></div>
+<div class="score-circle"><svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="70" fill="none" stroke="#1f2937" stroke-width="8"/><circle cx="80" cy="80" r="70" fill="none" stroke="#6366f1" stroke-width="8" stroke-dasharray="440" stroke-dashoffset="66" stroke-linecap="round"/></svg><div class="score-text"><div class="score-number">85</div><div class="score-label">Health Score</div></div></div>
+</div></section>
 
-    <section id="features">
-        <div class="container">
-            <div class="section-header">
-                <h2>Everything you need to audit a webpage</h2>
-                <p>PageLens analyzes any page across 7 critical dimensions, giving you actionable insights in seconds.</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="icon">🏥</div>
-                    <h3>Health Score</h3>
-                    <p>Get an overall 0-100 health score with a quick stats grid and top issues highlighted. Know instantly if a page needs work.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">⚡</div>
-                    <h3>Performance Audit</h3>
-                    <p>Page weight, request count, resource breakdown, and timing metrics. Identify what's slowing things down.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">🔍</div>
-                    <h3>SEO Analysis</h3>
-                    <p>Title/description validation, heading structure, image alt text audit, and canonical/robots checks.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">♿</div>
-                    <h3>Accessibility Check</h3>
-                    <p>Missing alt text, form labels, heading hierarchy, buttons without text, skip links, and lang attribute verification.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">🔧</div>
-                    <h3>Technology Detection</h3>
-                    <p>Detects 28+ technologies: React, Vue, Angular, jQuery, WordPress, Shopify, and more. Know what powers any site.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">📤</div>
-                    <h3>JSON Export</h3>
-                    <p>Download a complete audit report as JSON. Perfect for CI pipelines, documentation, or sharing with your team.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="features"><div class="container"><div class="section-header"><h2>Everything you need to audit a webpage</h2><p>PageLens analyzes any page across 7 critical dimensions, giving you actionable insights in seconds.</p></div>
+<div class="features-grid">
+<div class="feature-card"><div class="icon">🏥</div><h3>Health Score</h3><p>Get an overall 0-100 health score with a quick stats grid and top issues highlighted. Know instantly if a page needs work.</p></div>
+<div class="feature-card"><div class="icon">⚡</div><h3>Performance Audit</h3><p>Page weight, request count, resource breakdown, and timing metrics. Identify what's slowing things down.</p></div>
+<div class="feature-card"><div class="icon">🔍</div><h3>SEO Analysis</h3><p>Title/description validation, heading structure, image alt text audit, and canonical/robots checks.</p></div>
+<div class="feature-card"><div class="icon">♿</div><h3>Accessibility Check</h3><p>Missing alt text, form labels, heading hierarchy, buttons without text, skip links, and lang attribute verification.</p></div>
+<div class="feature-card"><div class="icon">🔧</div><h3>Technology Detection</h3><p>Detects 28+ technologies: React, Vue, Angular, jQuery, WordPress, Shopify, and more. Know what powers any site.</p></div>
+<div class="feature-card"><div class="icon">📤</div><h3>JSON Export</h3><p>Download a complete audit report as JSON. Perfect for CI pipelines, documentation, or sharing with your team.</p></div>
+</div></div></section>
 
-    <section id="categories">
-        <div class="container">
-            <div class="section-header">
-                <h2>7 analysis categories</h2>
-                <p>Comprehensive coverage of everything that matters for web quality</p>
-            </div>
-            <div class="audit-categories">
-                <div class="category-item">
-                    <span class="cat-icon">🏥</span>
-                    <div><div class="cat-name">Overview</div><div class="cat-desc">Health score & top issues</div></div>
-                </div>
-                <div class="category-item">
-                    <span class="cat-icon">⚡</span>
-                    <div><div class="cat-name">Performance</div><div class="cat-desc">Weight, requests, timing</div></div>
-                </div>
-                <div class="category-item">
-                    <span class="cat-icon">🔍</span>
-                    <div><div class="cat-name">SEO</div><div class="cat-desc">Title, headings, meta, images</div></div>
-                </div>
-                <div class="category-item">
-                    <span class="cat-icon">♿</span>
-                    <div><div class="cat-name">Accessibility</div><div class="cat-desc">Alt text, labels, hierarchy</div></div>
-                </div>
-                <div class="category-item">
-                    <span class="cat-icon">🔧</span>
-                    <div><div class="cat-name">Technology</div><div class="cat-desc">28+ framework detection</div></div>
-                </div>
-                <div class="category-item">
-                    <span class="cat-icon">🔒</span>
-                    <div><div class="cat-name">Security</div><div class="cat-desc">HTTPS, headers, mixed content</div></div>
-                </div>
-                <div class="category-item">
-                    <span class="cat-icon">🔗</span>
-                    <div><div class="cat-name">Links</div><div class="cat-desc">Internal, external, nofollow</div></div>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="categories"><div class="container"><div class="section-header"><h2>7 analysis categories</h2><p>Comprehensive coverage of everything that matters for web quality</p></div>
+<div class="audit-grid">
+<div class="cat-item"><span class="cat-icon">🏥</span><div><div class="cat-name">Overview</div><div class="cat-desc">Health score & top issues</div></div></div>
+<div class="cat-item"><span class="cat-icon">⚡</span><div><div class="cat-name">Performance</div><div class="cat-desc">Weight, requests, timing</div></div></div>
+<div class="cat-item"><span class="cat-icon">🔍</span><div><div class="cat-name">SEO</div><div class="cat-desc">Title, headings, meta, images</div></div></div>
+<div class="cat-item"><span class="cat-icon">♿</span><div><div class="cat-name">Accessibility</div><div class="cat-desc">Alt text, labels, hierarchy</div></div></div>
+<div class="cat-item"><span class="cat-icon">🔧</span><div><div class="cat-name">Technology</div><div class="cat-desc">28+ framework detection</div></div></div>
+<div class="cat-item"><span class="cat-icon">🔒</span><div><div class="cat-name">Security</div><div class="cat-desc">HTTPS, headers, mixed content</div></div></div>
+<div class="cat-item"><span class="cat-icon">🔗</span><div><div class="cat-name">Links</div><div class="cat-desc">Internal, external, nofollow</div></div></div>
+</div></div></section>
 
-    <section id="install">
-        <div class="container">
-            <div class="section-header">
-                <h2>Load in Chrome</h2>
-                <p>Developer mode installation — no build step needed</p>
-            </div>
-            <div class="install-steps">
-                <div class="install-step">
-                    <div class="step-num">1</div>
-                    <div class="step-text">Open Chrome and navigate to <code style="color:var(--accent)">chrome://extensions</code></div>
-                </div>
-                <div class="install-step">
-                    <div class="step-num">2</div>
-                    <div class="step-text">Enable "Developer mode" using the toggle in the top-right corner</div>
-                </div>
-                <div class="install-step">
-                    <div class="step-num">3</div>
-                    <div class="step-text">Click "Load unpacked" and select the <code style="color:var(--accent)">pagelens/</code> directory</div>
-                </div>
-                <div class="install-step">
-                    <div class="step-num">4</div>
-                    <div class="step-text">The PageLens icon appears in your toolbar — click it on any page to audit!</div>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="install"><div class="container"><div class="section-header"><h2>Load in Chrome</h2><p>Developer mode installation — no build step needed</p></div>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="step-text">Open Chrome and navigate to <code>chrome://extensions</code></div></div>
+<div class="step"><div class="step-num">2</div><div class="step-text">Enable "Developer mode" (top-right toggle)</div></div>
+<div class="step"><div class="step-num">3</div><div class="step-text">Click "Load unpacked" and select the <code>pagelens/</code> directory</div></div>
+<div class="step"><div class="step-num">4</div><div class="step-text">The PageLens icon appears in your toolbar — click it on any page to audit!</div></div>
+</div></div></section>
 
-    <footer>
-        <div class="container">
-            <div class="footer-links">
-                <a href="https://github.com/ericjoye/pagelens" target="_blank">GitHub</a>
-                <a href="https://github.com/ericjoye/pagelens/blob/main/LICENSE">License (MIT)</a>
-                <a href="https://github.com/ericjoye/pagelens/issues">Support</a>
-            </div>
-            <p>&copy; 2026 PageLens. Pure vanilla JS. MIT License.</p>
-        </div>
-    </footer>
+<footer><div class="container"><div class="footer-links"><a href="https://github.com/ericjoye/pagelens" target="_blank">GitHub</a><a href="https://github.com/ericjoye/pagelens/blob/main/LICENSE">License (MIT)</a><a href="https://github.com/ericjoye/pagelens/issues">Support</a></div><p>&copy; 2026 PageLens. Pure vanilla JS. MIT License.</p></div></footer>
 </body>
 </html>
